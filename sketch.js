@@ -1,6 +1,7 @@
 let fibonacci = [1, 1];
 let scale = 1;
 let shrinkRate = 0.99;
+let bgOn = true;
 
 // Panel
 let uiPanel;
@@ -12,6 +13,7 @@ let showControlsBtn;
 let sqCheckbox;
 let numCheckbox;
 let colCheckbox;
+let bgCheckbox;
 let frameRateSlider;
 let frameRateSliderLabel;
 let frameRateSliderValue;
@@ -27,7 +29,8 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  if (bgCheckbox.checked())
+    background(0);
   translate(width / 2, height / 2);
 
   for (let j = 0; j < fibonacci.length; j++) {
@@ -65,7 +68,7 @@ function draw() {
       stroke(255, 215, 0);
     }
     noFill();
-    strokeWeight(2);
+    strokeWeight(bgCheckbox.checked() ? 2 : 10);
     arc(len, 0, len * 2, len * 2, 90, 180);
     pop();
 
@@ -117,7 +120,7 @@ function initControls() {
   let sliderRow = createDiv();
   styleSliderRow(sliderRow);
 
-  hideControlsBtn = createButton('🞬');
+  hideControlsBtn = createButton('❌');
   hideControlsBtn.parent(uiPanel);
   hideControlsBtn.mousePressed(toggleControls);
   styleIconButton(hideControlsBtn);
@@ -137,22 +140,56 @@ function initControls() {
 
   sqCheckbox = createCheckbox('squares');
   sqCheckbox.parent(uiPanel);
+  sqCheckbox.changed(function () {
+    if (!bgOn) {
+      sqCheckbox.checked(false);
+    }
+  })
+
   numCheckbox = createCheckbox('numbers');
   numCheckbox.parent(uiPanel);
+  numCheckbox.changed(function () {
+    if (!bgOn) {
+      numCheckbox.checked(false);
+    }
+  });
+
   colCheckbox = createCheckbox('colors');
   colCheckbox.parent(uiPanel);
+
+  bgCheckbox = createCheckbox('background', true);
+  bgCheckbox.parent(uiPanel);
+  bgCheckbox.changed(function () {
+    bgOn = bgCheckbox.checked();
+
+    sqCheckbox.elt.disabled = !bgOn;
+    sqCheckbox.style('opacity', sqCheckbox.elt.disabled ? '0.5' : '1');
+    numCheckbox.elt.disabled = !bgOn;
+    numCheckbox.style('opacity', numCheckbox.elt.disabled ? '0.5' : '1');
+    if (!bgOn) {
+      background(0);
+      sqCheckbox.checked(bgOn);
+      numCheckbox.checked(bgOn);
+    }
+  });
+
   frameRateSliderLabel = createSpan('frameRate');
   frameRateSliderLabel.parent(sliderRow);
+
   frameRateSlider = createSlider(1, 60, 30, 1);
   frameRateSlider.parent(sliderRow);
+
   frameRateSliderValue = createSpan('30 FPS');
   frameRateSliderValue.parent(sliderRow);
+
   frameRateSlider.input(function () {
     frameRateSliderValue.html(frameRateSlider.value() + ' FPS');
   });
+
   if (isMobileDevice()) {
-    fullScreenBtn = createButton('fullScreen');
+    fullScreenBtn = createButton('🔲');
     fullScreenBtn.mousePressed(fullScreen);
+    styleIconButton(fullScreenBtn);
   }
   sliderRow.parent(uiPanel);
 }
@@ -169,7 +206,7 @@ function toggleControls() {
 
 function setDOMPositions() {
   if (isMobileDevice())
-    fullScreenBtn.position(windowWidth - fullScreenBtn.elt.offsetWidth - 1, fullScreenBtn.elt.offsetHeight);
+    fullScreenBtn.position(windowWidth - fullScreenBtn.elt.offsetWidth - 10, 10);
 }
 
 function stylePanel(panel) {
@@ -205,6 +242,7 @@ function styleHideControlsButton() {
   hideControlsBtn.style('position', 'absolute');
   hideControlsBtn.style('top', '5px');
   hideControlsBtn.style('right', '5px');
+  hideControlsBtn.style('z-index', '100');
 }
 
 // Helpers
