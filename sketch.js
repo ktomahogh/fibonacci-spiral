@@ -117,7 +117,7 @@ function initControls() {
   let sliderRow = createDiv();
   styleSliderRow(sliderRow);
 
-  hideControlsBtn = createButton('✖');
+  hideControlsBtn = createButton('❌');
   hideControlsBtn.parent(uiPanel);
   hideControlsBtn.mousePressed(toggleControls);
   styleIconButton(hideControlsBtn);
