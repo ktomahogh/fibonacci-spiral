@@ -242,6 +242,7 @@ function styleHideControlsButton() {
   hideControlsBtn.style('position', 'absolute');
   hideControlsBtn.style('top', '5px');
   hideControlsBtn.style('right', '5px');
+  hideControlsBtn.style('z-index', '100');
 }
 
 // Helpers
