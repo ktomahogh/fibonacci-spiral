@@ -151,8 +151,9 @@ function initControls() {
     frameRateSliderValue.html(frameRateSlider.value() + ' FPS');
   });
   if (isMobileDevice()) {
-    fullScreenBtn = createButton('fullScreen');
+    fullScreenBtn = createButton('🔲');
     fullScreenBtn.mousePressed(fullScreen);
+    styleIconButton(fullScreenBtn);
   }
   sliderRow.parent(uiPanel);
 }
@@ -169,7 +170,7 @@ function toggleControls() {
 
 function setDOMPositions() {
   if (isMobileDevice())
-    fullScreenBtn.position(windowWidth - fullScreenBtn.elt.offsetWidth - 1, fullScreenBtn.elt.offsetHeight);
+    fullScreenBtn.position(windowWidth - fullScreenBtn.elt.offsetWidth - 10, 10);
 }
 
 function stylePanel(panel) {
